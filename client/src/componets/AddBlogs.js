@@ -44,62 +44,71 @@ const AddBlogs = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <Box
-          borderRadius={10}
-          boxShadow="10px 10px 20px #ccc"
-          padding={3}
-          margin={"auto"}
-          marginTop={3}
-          display="flex"
-          flexDirection={"column"}
-          width={"80%"}
+          sx={{
+            borderRadius: 4,
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+            padding: 4,
+            margin: "auto",
+            marginTop: 4,
+            display: "flex",
+            flexDirection: "column",
+            width: { xs: "90%", sm: "70%", md: "50%" },
+            backgroundColor: "#ffffff",
+            transition: "0.3s",
+            '&:hover': { boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.3)" },
+          }}
         >
           <Typography
-            className={classes.font}
-            padding={3}
-            color="grey"
-            variant="h2"
-            textAlign={"center"}
+            sx={{ fontWeight: "bold", paddingBottom: 2, color: "#333" }}
+            variant="h4"
+            textAlign="center"
           >
             Post Your Blog
           </Typography>
-          <InputLabel className={classes.font} sx={labelStyles}>
-            Title
-          </InputLabel>
+          <InputLabel sx={{ fontWeight: "bold", color: "#555", mb: 1 }}>Title</InputLabel>
           <TextField
-            className={classes.font}
             name="title"
             onChange={handleChange}
             value={inputs.title}
-            margin="auto"
             variant="outlined"
+            fullWidth
+            sx={{ mb: 2 }}
           />
-          <InputLabel className={classes.font} sx={labelStyles}>
-            Description
-          </InputLabel>
+          <InputLabel sx={{ fontWeight: "bold", color: "#555", mb: 1 }}>Description</InputLabel>
           <TextareaAutosize
-            className={classes.font}
             name="description"
             onChange={handleChange}
             minRows={10}
-            margin="auto"
-            variant="outlined"
             value={inputs.description}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              fontSize: "1rem",
+            }}
           />
-          <InputLabel className={classes.font} sx={labelStyles}>
-            ImageURL
-          </InputLabel>
+          <InputLabel sx={{ fontWeight: "bold", color: "#555", mt: 2, mb: 1 }}>Image URL</InputLabel>
           <TextField
-            className={classes.font}
             name="imageURL"
             onChange={handleChange}
             value={inputs.imageURL}
-            margin="auto"
             variant="outlined"
+            fullWidth
+            sx={{ mb: 2 }}
           />
           <Button
-            sx={{ mt: 2, borderRadius: 4 }}
+            sx={{
+              mt: 3,
+              borderRadius: 2,
+              padding: "10px",
+              fontSize: "1rem",
+              backgroundColor: "#1976d2",
+              '&:hover': { backgroundColor: "#1565c0" },
+            }}
             variant="contained"
             type="submit"
+            fullWidth
           >
             Submit
           </Button>

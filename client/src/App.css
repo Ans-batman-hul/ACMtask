@@ -1,0 +1,14 @@
+/* General styles for the application */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.AppBar {
+  padding: 10px; /* Ensures the nav bar is wider */
+}
+
+.tabs {
+  font-weight: bold;
+  text-transform: none;
+}

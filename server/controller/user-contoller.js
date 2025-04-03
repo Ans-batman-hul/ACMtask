@@ -18,31 +18,40 @@ const getAllUser = async(req,res,next) =>{
 }
 
 const signUp = async(req,res,next) =>{
-   const { name , email , password } = req.body;
+   try {
+       const { name, email, password } = req.body;
 
-   let existingUser;
+       // Validate required fields
+       if (!name || !email || !password) {
+           return res.status(400).json({message: "All fields are required"});
+       }
 
-   try{
-    existingUser = await User.findOne({email})
-   }catch(e){
-    console.log(err);
+       // Validate password length
+       if (password.length < 6) {
+           return res.status(400).json({message: "Password must be at least 6 characters"});
+       }
+
+       // Check if user exists
+       const existingUser = await User.findOne({email});
+       if (existingUser) {
+           return res.status(400).json({message: "User already exists"});
+       }
+
+       // Hash password and create user
+       const hashedPassword = bcrypt.hashSync(password);
+       const user = new User({
+           name,
+           email,
+           password: hashedPassword,
+           blogs: []
+       });
+
+       await user.save();
+       return res.status(201).json({ user });
+   } catch (err) {
+       console.error(err);
+       return res.status(500).json({message: "Signup failed", error: err.message});
    }
-
-   if(existingUser){
-       return res.status(400).json({message : "User is already exists!"})
-   }
-   const hashedPassword = bcrypt.hashSync(password);
-   const user = new User({
-       name,email,
-       password: hashedPassword,
-       blogs: []
-   });
-
-   try{
-       user.save();
-       return res.status(201).json({ user })
-   }
-   catch(e){console.log(e);}
 }
 
 const logIn = async(req,res,next) => {

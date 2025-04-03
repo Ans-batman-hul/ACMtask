@@ -1,6 +1,6 @@
-import React, { useReducer } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { authActions, setDarkmode } from "../store";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { authActions } from "../store";
 import {
   AppBar,
   Typography,
@@ -11,18 +11,10 @@ import {
   Tab,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import { useState } from "react";
-import { lightTheme, darkTheme } from "../utils/theme";
 
 const Header = () => {
-  const dispath = useDispatch();
-  const isDark = useSelector((state) => state.theme.isDarkmode);
-  const theme = isDark ? darkTheme : lightTheme;
-
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
   const [value, setValue] = useState();
   const navigate = useNavigate();
 
@@ -35,41 +27,49 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="sticky" sx={{ background: `${theme.bg}` }}>
+    <AppBar position="sticky" sx={{ background: "linear-gradient(135deg, #1976d2 30%, #1565c0 90%)", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)" }}>
       <Toolbar>
-        <Typography variant="h4">BlogsApp</Typography>
         {isLoggedIn && (
-          <Box display="flex" marginLeft={"auto"} marginRight="auto">
+          <Box display="flex" marginRight="auto">
             <Tabs
               textColor="inherit"
               value={value}
               onChange={(e, val) => setValue(val)}
+              sx={{ '& .MuiTabs-indicator': { backgroundColor: "#ff9800" } }}
             >
               <Tab
-                //className={classes.font}
                 LinkComponent={Link}
                 to="/blogs"
                 label="All Blogs"
+                sx={{ fontWeight: "bold", textTransform: "none" }}
               />
               <Tab
-                //className={classes.font}
                 LinkComponent={Link}
                 to="/myBlogs"
                 label="My Blogs"
+                sx={{ fontWeight: "bold", textTransform: "none" }}
               />
               <Tab
-                //className={classes.font}
                 LinkComponent={Link}
                 to="/blogs/add"
                 label="Add Blog"
+                sx={{ fontWeight: "bold", textTransform: "none" }}
               />
             </Tabs>
           </Box>
         )}
+        <Typography variant="h4" sx={{ 
+          fontWeight: "bold", 
+          letterSpacing: "1px",
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)"
+        }}>
+          BlogShul
+        </Typography>
         <Box display="flex" marginLeft="auto">
           {!isLoggedIn && (
             <>
-              {" "}
               <Button
                 onClick={handleLoginClick}
                 sx={{
@@ -77,6 +77,8 @@ const Header = () => {
                   fontWeight: "bold",
                   color: "white",
                   borderRadius: 10,
+                  background: "linear-gradient(135deg, #1976d2 30%, #1565c0 90%)",
+                  '&:hover': { background: "#1565c0" }
                 }}
               >
                 Login
@@ -88,38 +90,32 @@ const Header = () => {
                   fontWeight: "bold",
                   color: "white",
                   borderRadius: 10,
+                  background: "linear-gradient(135deg, #ff9800 30%, #ff5722 90%)",
+                  '&:hover': { background: "#ff5722" }
                 }}
               >
                 SignUp
               </Button>
             </>
           )}
-
           {isLoggedIn && (
             <Button
-              onClick={() => dispath(authActions.logout())}
+              onClick={() => dispatch(authActions.logout())}
               LinkComponent={Link}
               to="/login"
               variant="contained"
-              sx={{ margin: 1, borderRadius: 10 }}
+              sx={{
+                margin: 1,
+                borderRadius: 10,
+                background: "linear-gradient(135deg, #f57c00 30%, #e65100 90%)",
+                color: "white",
+                '&:hover': { background: "#e65100" }
+              }}
               color="warning"
             >
               Logout
             </Button>
           )}
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              dispath(setDarkmode(!isDark));
-            }}
-            style={{
-              alignContent: "center",
-              padding: "10px 0",
-              cursor: "pointer",
-            }}
-          >
-            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
-          </div>
         </Box>
       </Toolbar>
     </AppBar>

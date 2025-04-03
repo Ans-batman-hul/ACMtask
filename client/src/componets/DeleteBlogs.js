@@ -1,20 +1,33 @@
 import React from "react";
+import { Button } from "@mui/material"; // Importing Button component
 import axios from "axios";
 import config from "../config";
 
 const DeleteButton = ({ blogId, onDelete }) => {
   const handleDelete = async () => {
     try {
-      // Send a delete request to your backend
       await axios.delete(`${config.BASE_URL}/api/blogs/${blogId}`);
-      // Call the onDelete callback to update the UI
       onDelete();
     } catch (error) {
       console.error("Error deleting blog:", error);
     }
   };
 
-  return <button onClick={handleDelete}>Delete</button>;
+  return (
+    <Button
+      onClick={handleDelete}
+      sx={{
+        margin: 1,
+        fontWeight: "bold",
+        color: "white",
+        borderRadius: 10,
+        background: "linear-gradient(135deg, #d32f2f 30%, #b71c1c 90%)",
+        '&:hover': { background: "#b71c1c" }
+      }}
+    >
+      Delete
+    </Button>
+  );
 };
 
 export default DeleteButton;

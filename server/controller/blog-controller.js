@@ -12,44 +12,11 @@ const getAllBlogs = async(req,res,next) =>{
     }
 
     if(!blogs){
-        return res.status(404).json({message : " No blogs found"});
+        return res.status(404).json({message : "Where the blogs at?"});
     }
 
     return res.status(200).json({blogs});
 }
-
-// const addBlog = async(req,res,next) =>{
-
-//     const { title , desc , img , user } = req.body;
-
-//     let existingUser;
-//     try {
-//         existingUser = await User.findById(user);
-//     } catch (e) {
-//         return console.log(e);
-//     }
-
-//     if(!existingUser){
-//         return res.status(400).json({message: " Unautorized"});
-//     }
-//     const blog = new Blog({
-//         title ,desc , img , user
-//     });
-
-//     try {
-//       const session = await mongoose.startSession();
-//       session.startTransaction();
-//       await  blog.save({session});
-//       existingUser.blogs.push(blog);
-//       await existingUser.save({session});
-//       await session.commitTransaction();
-//     } catch (e) {
-//        return res.status(500).json({message:e})
-//     }
-
-//     return res.status(200).json({blog});
-// }
-
 
 const addBlog = async(req,res,next) =>{
 
@@ -64,7 +31,7 @@ const addBlog = async(req,res,next) =>{
         return console.log(e);
     }
         if(!existingUser){
-        return res.status(400).json({message: " Unautorized"});
+        return res.status(400).json({message: "User not authorised"});
     }
 
 
@@ -126,34 +93,42 @@ const getById = async (req,res,next) =>{
     }
 
     if(!blog){
-        return res.status(500).json({ message : "not found"});
+        return res.status(500).json({ message : "Cannot be found"});
     }
     
     return res.status(200).json({blog});
 }
 
 const deleteBlog = async (req, res, next) => {
+    const { userId } = req.body;
+    const { id } = req.params;
 
-    const id = req.params.id;
-    
     try {
-        const blog = await Blog.findByIdAndDelete(id).populate('user');
-
+        // First find the blog to verify ownership
+        const blog = await Blog.findById(id).populate('user');
+        
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
 
-        // Remove the blog from the user's blogs array
+        // Verify ownership
+        if (blog.user._id.toString() !== userId) {
+            return res.status(403).json({ message: "Unauthorized to delete this blog" });
+        }
+
+        // Remove blog from user's blogs array
         const user = blog.user;
         user.blogs.pull(blog);
         await user.save();
 
-        return res.status(200).json({ message: "Successfully deleted" });
+        // Delete the blog after successful verification
+        await Blog.findByIdAndDelete(id);
+
+        return res.status(200).json({ message: "Deleted successfully" });
 
     } catch (e) {
-        console.error(e);
-        return res.status(500).json({ message: "Unable to delete" });
-
+        console.error("Delete error:", e);
+        return res.status(500).json({ message: "Error deleting blog" });
     }
 }
 

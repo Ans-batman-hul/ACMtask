@@ -15,12 +15,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useStyles } from "./utils";
 import config from "../config";
+
 const Blogs = ({ title, desc, img, user, isUser, id }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  
   const handleEdit = () => {
     navigate(`/myBlogs/${id}`);
   };
+
   const deleteRequest = async () => {
     const res = await axios
       .delete(`${config.BASE_URL}/api/blogs/${id}`)
@@ -28,14 +31,15 @@ const Blogs = ({ title, desc, img, user, isUser, id }) => {
     const data = await res.data;
     return data;
   };
+
   const handleDelete = () => {
     deleteRequest()
       .then(() => navigate("/"))
       .then(() => navigate("/blogs"));
   };
+
   return (
     <div>
-      {" "}
       <Card
         sx={{
           width: "40%",
@@ -53,7 +57,9 @@ const Blogs = ({ title, desc, img, user, isUser, id }) => {
             <IconButton onClick={handleEdit} sx={{ marginLeft: "auto" }}>
               <ModeEditOutlineIcon color="warning" />
             </IconButton>
-            {/* Remove the delete button */}
+            <IconButton onClick={handleDelete}>
+              <DeleteForeverIcon color="error" />
+            </IconButton>
           </Box>
         )}
         <CardHeader
@@ -69,7 +75,6 @@ const Blogs = ({ title, desc, img, user, isUser, id }) => {
           title={title}
         />
         <CardMedia component="img" height="194" image={img} alt="some image of whatever" />
-
         <CardContent>
           <hr />
           <br />
