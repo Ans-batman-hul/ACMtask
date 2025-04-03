@@ -37,7 +37,6 @@ const Login = () => {
             password: inputs.password,
         });
         
-        // Check if response is valid
         if (res && res.data) {
             return res.data;
         } else {

@@ -13,7 +13,7 @@ const Blogs = ({ isUser }) => {
       return res.data;
     } catch (err) {
       console.log(err);
-      return { blogs: [] }; // Return empty array if request fails
+      return { blogs: [] };
     }
   };
   useEffect(() => {

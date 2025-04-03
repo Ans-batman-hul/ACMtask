@@ -81,7 +81,7 @@ const UserBlogs = () => {
       return res.data;
     } catch (err) {
       console.log(err);
-      return { user: { blogs: [] } }; // Return empty user with empty blogs array if request fails
+      return { user: { blogs: [] } };
     }
   };
 

@@ -104,24 +104,20 @@ const deleteBlog = async (req, res, next) => {
     const { id } = req.params;
 
     try {
-        // First find the blog to verify ownership
         const blog = await Blog.findById(id).populate('user');
         
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
 
-        // Verify ownership
         if (blog.user._id.toString() !== userId) {
             return res.status(403).json({ message: "Unauthorized to delete this blog" });
         }
 
-        // Remove blog from user's blogs array
         const user = blog.user;
         user.blogs.pull(blog);
         await user.save();
 
-        // Delete the blog after successful verification
         await Blog.findByIdAndDelete(id);
 
         return res.status(200).json({ message: "Deleted successfully" });
